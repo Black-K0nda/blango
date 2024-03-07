@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+<<<<<<< HEAD
 from django.urls import path, include
 from django.conf.urls import url
 from django.views.static import serve
@@ -24,6 +25,14 @@ urlpatterns = [
     path('admin/', admin.site.urls),  # Keep
     # path('accounts/', include('django.contrib.auth.urls')),  # Keep
     # url(r'^oauth/', include('social_django.urls', namespace='social')),  # Keep
+=======
+from django.urls import path
+import blog.views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path("", blog.views.index)
+>>>>>>> 4d9b0b277bd9b844df3ed26c6b05376cadf9b2cd
 ]
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
