@@ -7,13 +7,15 @@ register = template.Library()
 user_model = get_user_model()
 
 @register.filter
-def author_details(author):
+def author_details(author, current_user):
     if not isinstance(author, user_model):
         # return empty string as safe default
         return ""
 
     if author.first_name and author.last_name:
         name = f"{author.first_name} {author.last_name}"
+    elif author == current_user:
+        name = format_html('<strong>Me</strong>')
     else:
         name = f"{author.username}"
 
