@@ -20,15 +20,21 @@ from django.views.static import serve
 from django.urls import path
 import blog.views
 import os
+import debug_toolbar
+from django.conf import settings
 
 urlpatterns = [
     path('', include('blog.urls', 'blog')),
     path("post/<slug>/", blog.views.post_detail, name='blog-post-detail'),
     path('admin/', admin.site.urls),  # Keep
+    path("ip/", blog.views.get_ip),
     # path('accounts/', include('django.contrib.auth.urls')),  # Keep
     # url(r'^oauth/', include('social_django.urls', namespace='social')),  # Keep
 ]
-
+if settings.DEBUG:
+  urlpatterns += [
+    path("__debug__/", include(debug_toolbar.urls)),
+  ]
 # urlpatterns = [
 #     path('admin/', admin.site.urls),
 #     path("", blog.views.index)

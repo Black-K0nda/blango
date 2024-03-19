@@ -88,7 +88,7 @@ class Dev(Configuration):
     CSRF_COOKIE_SAMESITE = 'None'
     SESSION_COOKIE_SAMESITE = 'None'
 
-
+    INTERNAL_IPS = ["192.168.10.226"]
     # Application definition
 
     INSTALLED_APPS = [
@@ -101,6 +101,7 @@ class Dev(Configuration):
         'blog.apps.BlogConfig',
         'crispy_forms',
         'crispy_bootstrap5',
+        'debug_toolbar',
     ]
 
     MIDDLEWARE = [
@@ -110,6 +111,7 @@ class Dev(Configuration):
         #'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
         #'django.middleware.clickjacking.XFrameOptionsMiddleware',
     ]
 
