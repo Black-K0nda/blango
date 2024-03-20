@@ -97,12 +97,17 @@ class Dev(Configuration):
         'django.contrib.contenttypes',
         'django.contrib.sessions',
         'django.contrib.messages',
+        'django.contrib.sites',
+        'allauth',
+        'allauth.account',
+        'allauth.socialaccount',
         'django.contrib.staticfiles',
         'blango_auth.apps.BlangoAuthConfig',
         'blog.apps.BlogConfig',
         'crispy_forms',
         'crispy_bootstrap5',
         'debug_toolbar',
+        'allauth.socialaccount.providers.google',
     ]
 
     MIDDLEWARE = [
@@ -139,7 +144,12 @@ class Dev(Configuration):
     CRISPY_TEMPLATE_PACK = "bootstrap5"
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     ACCOUNT_ACTIVATION_DAYS = 7
-    
+    SITE_ID = 1
+
+    ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+    ACCOUNT_EMAIL_REQUIRED = True
+    ACCOUNT_USERNAME_REQUIRED = False
+    ACCOUNT_AUTHENTICATION_METHOD = 'email'
     # Database
     # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
