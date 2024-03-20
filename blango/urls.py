@@ -22,12 +22,24 @@ import blog.views
 import os
 import debug_toolbar
 from django.conf import settings
+import blango_auth.views
+from django_registration.backends.activation.views import RegistrationView
+from blango_auth.forms import BlangoRegistrationForm
+
 
 urlpatterns = [
+    path("accounts/", include('django.contrib.auth.urls')),
+    path("accounts/profile/", blango_auth.views.profile, name='profile'),
     path('', include('blog.urls', 'blog')),
     path("post/<slug>/", blog.views.post_detail, name='blog-post-detail'),
     path('admin/', admin.site.urls),  # Keep
     path("ip/", blog.views.get_ip),
+    path(
+        "accounts/register/",
+        RegistrationView.as_view(form_class=BlangoRegistrationForm),
+        name="django_registration_register",
+    ),
+    path("accounts/", include("django_registration.backends.activation.urls")),
     # path('accounts/', include('django.contrib.auth.urls')),  # Keep
     # url(r'^oauth/', include('social_django.urls', namespace='social')),  # Keep
 ]
