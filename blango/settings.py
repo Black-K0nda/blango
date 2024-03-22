@@ -108,6 +108,7 @@ class Dev(Configuration):
         'crispy_bootstrap5',
         'debug_toolbar',
         'allauth.socialaccount.providers.google',
+        'rest_framework',
     ]
 
     MIDDLEWARE = [
