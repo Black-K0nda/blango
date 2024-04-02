@@ -14,6 +14,11 @@ class TagField(serializers.SlugRelatedField):
     except (TypeError, ValueError):
       self.fail(f"Tag value {data} is invalid")
 
+class TagSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Tag
+    fields = '__all__'
+    
 
 class CommentSerializer(serializers.ModelSerializer):
   id = serializers.IntegerField(required=False)
