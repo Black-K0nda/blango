@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta
 from django.http import Http404
+from blog.api.filters import PostFilterSet
 
 class UserDetail(generics.RetrieveAPIView):
   lookup_field = 'email'
@@ -25,6 +26,8 @@ class UserDetail(generics.RetrieveAPIView):
 
 
 class PostViewSet(viewsets.ModelViewSet):
+  filterset_class = PostFilterSet
+  ordering_fields = ['published_at', 'author', 'title', 'slug']
   permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject]
   queryset = Post.objects.all()
 
@@ -76,6 +79,13 @@ class PostViewSet(viewsets.ModelViewSet):
     if request.user.is_anonymous:
       raise PermissionDenied("You must be logged in to see which posts are yours.")
     posts = self.get_queryset().filter(author=request.user)
+
+    page = self.paginate_queryset(posts)
+
+    if page is not None:
+      serializer = PostSerializer(page, many=True, context={'request': request})
+      return self.get_paginated_response(serializer.data)
+
     serializer = PostSerializer(posts, many=True, context={'request': request})
     return Response(serializer.data)
     
@@ -90,22 +100,27 @@ class PostViewSet(viewsets.ModelViewSet):
 #   serializer_class = PostDetailSerializer
   
 class TagViewSet(viewsets.ModelViewSet):
-  queryset = Tag.objects.all()
-  serializer_class = TagSerializer
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
 
-  @method_decorator(cache_page(300))
-  def list(self, *args, **kwargs):
-    return super(TagViewSet, self).get(*args, **kwargs)
+    @method_decorator(cache_page(300))
+    def list(self, *args, **kwargs):
+        return super(TagViewSet, self).list(*args, **kwargs)
 
-  @method_decorator(cache_page(300))
-  def retrieve(self, *args, **kwargs):
-    return super(TagViewSet, self).retrieve(*args, **kwargs)
+    @method_decorator(cache_page(300))
+    def retrieve(self, *args, **kwargs):
+        return super(TagViewSet, self).retrieve(*args, **kwargs)
 
-    
-  @action(methods=['get'], detail=True, name="Posts with the Tag")
-  def posts(self, request, pk=None):
-    tag = self.get_object()
-    post_serializer = PostSerializer(
-      tag.posts, many=True, context={"request": request}
-    )
-    return Response(post_serializer.data)
+    @action(methods=['get'], detail=True, name="Posts with the Tag")
+    def posts(self, request, pk=None):
+        tag = self.get_object()
+        page = self.paginate_queryset(tag.posts)
+        if page is not None:
+            post_serializer = PostSerializer(
+                page, many=True, context={"request": request}
+            )
+            return self.get_paginated_response(post_serializer.data)
+        post_serializer = PostSerializer(
+            tag.posts, many=True, context={"request": request}
+        )
+        return Response(post_serializer.data)
