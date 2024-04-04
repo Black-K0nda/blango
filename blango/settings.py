@@ -15,7 +15,7 @@ import os
 from configurations import Configuration, values
 import dj_database_url
 import logging
-import datetime import timedelta
+from datetime import timedelta
 
 logger = logging.getLogger(__name__)
 
@@ -92,6 +92,8 @@ class Dev(Configuration):
     INTERNAL_IPS = ["192.168.10.226"]
     # Application definition
 
+    
+
     INSTALLED_APPS = [
         'django.contrib.admin',
         'django.contrib.auth',
@@ -113,6 +115,7 @@ class Dev(Configuration):
         'rest_framework.authtoken',
         'drf_yasg',
         'django_filters',
+        "versatileimagefield", 
     ]
 
     REST_FRAMEWORK = {
@@ -234,7 +237,8 @@ class Dev(Configuration):
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     STATIC_URL = '/static/'
 
     # Default primary key field type
